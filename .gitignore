@@ -1,0 +1,6 @@
+*.log
+.vagrant
+.absible
+.cache
+packer_cache
+builds

@@ -1,0 +1,74 @@
+{
+    "variables": {
+        "version": ""
+      },
+      "provisioners": [
+        {
+          "type": "shell",
+          "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
+          "script": "scripts/apt/ansible.sh"
+        },
+        {
+          "type": "ansible-local",
+          "playbook_file": "ansible/main.yml",
+          "galaxy_file": "requirements.yml",
+          "group_vars": "ansible/group_vars",
+          "inventory_file": "inventory"
+        },
+        {
+          "type": "shell",
+          "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
+          "script": "scripts/apt/cleanup.sh"
+        }
+      ],
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 81920,
+            "guest_os_type": "RedHat_64",
+            "headless": true,
+            "http_directory": "http",
+            "iso_url": "http://releases.ubuntu.com/18.04/ubuntu-18.04-desktop-amd64.iso",
+            "iso_checksum_type": "md5",
+            "iso_checksum": "72491db7ef6f3cd4b085b9fe1f232345",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "1000s",
+            "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+            "guest_additions_path": "VBoxGuestAdditions_{{ .Version }}.iso",
+            "virtualbox_version_file": "{{ .vbox_version }}",
+            "vm_name": "ansible-test-ubuntu-x86_64",
+            "vboxmanage": [
+              [
+                "modifyvm",
+                "{{.Name}}",
+                "--memory",
+                "2048"
+              ],
+              [
+                "modifyvm",
+                "{{.Name}}",
+                "--cpus",
+                "2"
+              ]
+            ]
+          }
+        ],
+        "post-processors": [
+          {
+            "compression_level": "5",
+            "type": "vagrant",
+            "output": "./builds/ansible-zero-downtime.box"
+          },
+          {
+            "type": "checksum",
+            "checksum_types": ["md5", "sha256", "sha512"],
+            "output": "./builds/packer_{{.BuildName}}_{{.BuilderType}}.{{.ChecksumType}}"
+          }
+         ]
+}
