@@ -1,0 +1,10 @@
+---
+- src: geerlingguy.java
+- src: geerlingguy.ntp
+- src: geerlingguy.repo-epel
+- src: geerlingguy.elasticsearch
+- src: geerlingguy.packer_rhel
+- src: geerlingguy.packer-debian
+- src: geerlingguy.filebeat
+- src: geerlingguy.kibana
+- src: geerlingguy.nfs
