@@ -1,0 +1,103 @@
+{
+  "variables": {
+    "version": "",
+    "distribution":"debian",
+    "distribution_major_version": "",
+    "distribution_mior_release": "",
+    "locale_env": "de_DE.UTF-8",
+    "keyboard_keymap": "",
+    "ansible_user": "vagrant",
+    "my_secret": "{{env `MY_SECRET`}}",
+    "vagrant_role":"elk"
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/apt/ansible-debian.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/apt/setup.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./ansible/main.yml",
+      "galaxy_file": "requirements.yml",
+      "group_vars": "./ansible/group_vars",
+      "inventory_file": "inventory"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "./scripts/apt/cleanup-debian.sh"
+    }
+  ],
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<esc><wait>",
+        "install <wait>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US.UTF-8 <wait>",
+        "auto <wait>",
+        "locale=en_US.UTF-8 <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "netcfg/get_hostname={{ .Name }} <wait>",
+        "netcfg/get_domain=vagrantup.com <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "grub-installer/bootdev=/dev/sda <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "5s",
+      "disk_size": 81920,
+      "guest_os_type": "Debian_64",
+      "headless": true,
+      "http_directory": "http",
+      "iso_url": "https://cdimage.debian.org/debian-cd/10.2.0/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso",
+      "iso_checksum": "e43fef979352df15056ac512ad96a07b515cb8789bf0bfd86f99ed0404f885f5",
+      "iso_checksum_type": "sha256",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-debian-10-amd64",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "post-processors":
+  [
+    {
+      "compression_level": "5",
+      "type": "vagrant",
+      "output": "./builds/ansible-ubuntu-zero-downtime.box"
+    },
+    {
+      "type": "checksum",
+      "checksum_types": ["md5", "sha256", "sha512"],
+      "output": "./builds/packer_{{.BuildName}}_{{.BuilderType}}.{{.ChecksumType}}"
+    }
+  ]
+}
