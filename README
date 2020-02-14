@@ -1,5 +1,22 @@
-# Overview
+# Vagrant Environment 
 
 * [ansible-playbook-bundle](https://github.com/ansibleplaybookbundle/ansible-playbook-bundle)
 * [okd](https://www.okd.io/)
 * [Openshift ansible role](https://github.com/openshift/openshift-ansible)
+
+This is for testing Rolling updates with Ansible and Packer.
+
+## first tests
+
+For first tests you can use the  following
+
+`./init-env.sh centos-7.json`
+
+that script executes packer first to start your own box with vagrant.
+In this case i used for example centos7 but you can also choose:
+
+- centos8.json
+- debian-10.json (not well tested)
+- ubuntu-1805.json
+
+>>>>>>> b8473bb75711eb7216d5138800b036fa67473230
