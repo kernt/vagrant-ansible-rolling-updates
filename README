@@ -1,12 +1,5 @@
 # Overview
 
-The _/ansible/_
-
-The _/ansible/_
-
-The _/ansible/_
-
-The dir _/templates/_ are for Terraform templates
-
-The dir _/builds/_is for Packer build.
-
+* [ansible-playbook-bundle](https://github.com/ansibleplaybookbundle/ansible-playbook-bundle)
+* [okd](https://www.okd.io/)
+* [Openshift ansible role](https://github.com/openshift/openshift-ansible)
