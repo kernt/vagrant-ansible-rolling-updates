@@ -19,4 +19,9 @@ In this case i used for example centos7 but you can also choose:
 - debian-10.json (not well tested)
 - ubuntu-1805.json
 
->>>>>>> b8473bb75711eb7216d5138800b036fa67473230
+## Openstack Ansible roles 
+
+* (ansible-role-openstack-operations)[https://github.com/openstack/ansible-role-openstack-operations]
+* (openstack-ansible with vagrant)[https://github.com/openstack/openstack-ansible]
+* (Openstck INstall guide)[https://docs.openstack.org/de/install-guide/]
+* (Openstack tests)[https://github.com/openstack/openstack-ansible-tests]
